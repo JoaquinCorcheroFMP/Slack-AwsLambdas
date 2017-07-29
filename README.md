@@ -1,6 +1,14 @@
 # Slack-AwsLambdas
 
-####Steps to get the lambda function working:
+## To run the project locally
+- install lambda-local (npm install lambda-local -g)
+- Set the following environment variables:
+    - SLACK_VERIFICATION_TOKEN
+    - SLACK_ACCESS_TOKEN
+    - KEY
+    - MONGO_USER
+    - MONGO_PWD
 
-- Followed tutorial from [slack](https://api.slack.com/tutorials/aws-lambda): the turorial is a bit out of date as the web interface has chaned. After following, and trying to access the api end point get internal server error.
-- On the code the callback wasn't returning an expected result from an api, changed the code to: `callback(null, {"statusCode": 200, "body": JSON.stringify(result)})` found in [here](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html), very bottom
+## Resources:
+- [Slack applications](https://api.slack.com/apps)
+- Steps to connect from AWS lambdas with [MongoDB](https://www.mongodb.com/blog/post/serverless-development-with-nodejs-aws-lambda-mongodb-atlas)

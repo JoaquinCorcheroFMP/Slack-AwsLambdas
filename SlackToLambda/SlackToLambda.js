@@ -1,17 +1,17 @@
+'use strict';
 const https = require('https');
 const AWS = require('aws-sdk');
 const qs = require('querystring');
-const VERIFICATION_TOKEN = process.env.VERIFICATION_TOKEN;
-const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
-const BUCKET_NAME = process.env.BUCKET_NAME;
-const KEY = process.env.KEY;
+const VERIFICATION_TOKEN = process.env.SLACK_VERIFICATION_TOKEN;
+const ACCESS_TOKEN = process.env.SLACK_ACCESS_TOKEN;
+const BUCKET_NAME = 'slackl-lambda-s3';
 
 
-doCallback = (statusCode, body, callback) => {
+let doCallback = (statusCode, body, callback) => {
     callback(null, {"statusCode": statusCode, "body": body});
 };
 
-validateVerificationToken = (body, callback) => {
+let validateVerificationToken = (body, callback) => {
     if (body.token === VERIFICATION_TOKEN){
         doCallback(200, body.challenge, callback);
         return;
@@ -19,7 +19,7 @@ validateVerificationToken = (body, callback) => {
     doCallback(402, "verification failed", callback);   
 };
 
-putObjectToS3 = (data, callback) =>{
+let putObjectToS3 = (data, callback) =>{
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
         return v.toString(16);
@@ -62,5 +62,4 @@ exports.handler = (data, context, callback) => {
     {
         doCallback(500, e, callback);
     }
-    //doCallback(200, body.token, callback);
-};
+  };
