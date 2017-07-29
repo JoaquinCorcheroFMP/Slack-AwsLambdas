@@ -1,7 +1,10 @@
 const https = require('https');
+const AWS = require('aws-sdk');
 const qs = require('querystring');
 const VERIFICATION_TOKEN = process.env.VERIFICATION_TOKEN;
 const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
+const BUCKET_NAME = process.env.BUCKET_NAME;
+const KEY = process.env.KEY;
 
 
 doCallback = (statusCode, body, callback) => {
@@ -16,21 +19,28 @@ validateVerificationToken = (body, callback) => {
     doCallback(402, "verification failed", callback);   
 };
 
-processEvent = (event, callback) =>{
-
-        var text = `<@${event.user}> Send from process`;
-        var message = { 
-            token: ACCESS_TOKEN,
-            channel: event.channel,
-            text: text
-        };
-
-        var query = qs.stringify(message); // prepare the querystring
-        https.get(`https://slack.com/api/chat.postMessage?${query}`);
-
-    //doCallback(200, event + "55", callback);
-    doCallback(200, null, callback);
-};
+putObjectToS3 = (data, callback) =>{
+    var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
+    
+    var s3 = new AWS.S3();
+        var params = {
+            Bucket : BUCKET_NAME,
+            Key : guid + ".json",
+            Body : JSON.stringify(data)
+        }
+        s3.putObject(params, function(err, data) {
+            if (err){
+                doCallback(500, "Couldn't save message on S3: " + err.stack, callback);
+                console.log(err, err.stack);
+            }else{
+                doCallback(200, "Message saved to S3", callback);
+                console.log(data);           // successful response
+            }
+        });
+}
 
 // Lambda handler
 exports.handler = (data, context, callback) => {
@@ -43,7 +53,7 @@ exports.handler = (data, context, callback) => {
                 validateVerificationToken(body, callback);
             break;
             case "event_callback": 
-                processEvent(body.event, callback);
+                putObjectToS3(body, callback);
             break;
             default: 
                 doCallback(404, "Invalid type received: " + body.type, callback);
