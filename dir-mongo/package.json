@@ -1,14 +1,15 @@
 {
-  "name": "lambda-atkas-create-doc",
+  "name": "dir-mongo",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "Will read from fs and write to mongo",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Joaquin Corchero",
   "license": "ISC",
   "dependencies": {
+    "chokidar": "^1.7.0",
     "mongodb": "^2.2.30"
   }
 }
