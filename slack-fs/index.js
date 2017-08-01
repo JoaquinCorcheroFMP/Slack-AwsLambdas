@@ -19,15 +19,31 @@ const writeFile = (fileContent) => {
         JSON.stringify(fileContent),
         function(er) {
             if(er)
-                console.log('Error writting file: ' + er);
+                console.log('  !!!!!!!! Error writting file: ' + er);
+            else
+                console.log(`  ** Event written: ${JSON.stringify(fileContent)}`);
         }
     );
 };
 
-const initializeEventListeners = (eventNames) => {
-    client.message(function(msg) {
-        writeFile(msg);
-    });
+const initializeEventListeners = () => {
+    eventNames = Object.keys(client);
+    console.log('Adding listeners:');
+    for(let i = 0; i < eventNames.length; i ++)
+    {
+        var eventName = eventNames[i];
+        try{
+            client[eventName]((msg) => {
+                writeFile(msg);
+            });
+            console.log(`- Listening to event: ${eventName}`);
+        }catch(e)
+        {
+            //console.log(`Failed to add event ${eventName}: ${e}`);
+        }
+    }
+
+    console.log('Finished adding listeners');
 };
 
 const start = () => {
