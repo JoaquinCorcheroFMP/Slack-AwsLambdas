@@ -1,0 +1,3 @@
+module.exports = {
+  mongoCnn = 'mongodb:://username:password$@instance/options'
+};

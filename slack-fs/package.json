@@ -4,8 +4,11 @@
   "description": "Will pull slack notifications and store the content to disk",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "author": "Joaquin Corchero",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "slack": "^8.3.1"
+  }
 }
