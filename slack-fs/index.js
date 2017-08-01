@@ -1,6 +1,6 @@
 const slack = require('slack');
 const fs = require('fs');
-const token = provess.env.SLACK_TOKEN;
+const token = process.env.SLACK_ACCESS_TOKEN;
 const destinationDirectory = '../store/';
 const client = slack.rtm.client();
 
@@ -32,6 +32,7 @@ const initializeEventListeners = (eventNames) => {
 
 const start = () => {
     client.listen({token:token});
+    
     console.log('I am listening');
 
     initializeEventListeners();
