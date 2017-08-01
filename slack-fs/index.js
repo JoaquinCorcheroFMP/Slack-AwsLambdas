@@ -5,6 +5,12 @@ const config = require('./config');
 const destinationDirectory = '../store/';
 const client = slack.rtm.client();
 
+const createDirectoryIfNotExists = () =>{
+    if (!fs.existsSync(destinationDirectory)){
+        fs.mkdirSync(destinationDirectory);
+    }
+};
+
 const generateFileName = () => {
     let guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
         var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
@@ -48,6 +54,8 @@ const initializeEventListeners = () => {
 };
 
 const start = () => {
+    createDirectoryIfNotExists();
+
     client.listen({token:config.slackAccessToken});
     
     console.log(' :-? I am listening');
